@@ -14,6 +14,7 @@ This project will need several available ports on your machine:
 - 4000: A nodejs [apollo gateway](https://www.apollographql.com/docs/federation/gateway/)
 - 4001 to 4004: nodejs subservices exposing functionality the apollo gateway and the Apollo Federation router will expose.
 - 6831, 6832, 16686 and 14268: a [Jaeger tracing](https://www.jaegertracing.io/) node that will collect logs and spans from the gateway, the Apollo federation router, and the subservices. The traces are available at http://localhost:16686
+- 4100: The Apollo federation router
 
 In this project's root directory, run `docker-compose up -d`:
 
