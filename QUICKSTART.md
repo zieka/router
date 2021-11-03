@@ -22,7 +22,9 @@ Have a look at the [docker-compose readme](./examples/docker-compose/README.md) 
 
 ### NodeJS subservices example
 
-TODO [igni]
+-[Nodejs and npm](https://nodejs.org/en/download/)
+
+Have a look at the [nodejs example readme](./examples/nodejs/README.md) to set the services up and run the demo.
 
 ### Rust subservices example
 
