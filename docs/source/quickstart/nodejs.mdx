@@ -1,18 +1,24 @@
+---
+title: Local setup with nodejs subservices
+sidebar_title: Local setup with Nodejs subservices
+description: Set up the Apollo router, and run it against nodejs web services.
+---
+
 # Nodejs subservices demonstration
 
 This configuration allows you to quickly start a router, and nodejs subservices.
 
 ## Prerequisites:
 
-- Nodejs: Follow the [install instructions](https://nodejs.org/en/download/) to install nodejs and npm
-- Rust: Head over to [the rustup website](https://rustup.rs/) to install rust
+- Nodejs: Follow the [install instructions](https://nodejs.org/en/download/) to install nodejs and npm.
+- Rust: Head over to [the rustup website](https://rustup.rs/) to install rust.
 
 ## Environment setup
 
-⚠️ Make sure your submodules are up to date if you want to experiment around the local examples ⚠️
+⚠️ Make sure your submodules are up to date if you want to experiment around the local examples!
 
 ```sh
-$ git submodule update --init --recursive
+git submodule update --init --recursive
 ```
 
 This project will need several available ports on your machine:
@@ -23,7 +29,7 @@ This project will need several available ports on your machine:
 In the federation-demo directory, install the nodejs dependencies by running:
 
 ```sh
-$ npm install
+npm install
 ```
 
 This will install all of the dependencies for the gateway and each underlying service.
