@@ -1,0 +1,3 @@
+[submodule "federation-demo"]
+	path = examples/nodejs/federation-demo
+	url = https://github.com/apollographql/federation-demo
