@@ -1,5 +1,11 @@
 # QUICKSTART
 
+/ ! \ Make sure your submodules are up to date if you want to experiment around the local examples / ! \
+
+```sh
+$ git submodule update --init --recursive
+```
+
 ## Prerequisites:
 
 - [Rust](https://rustup.rs/)

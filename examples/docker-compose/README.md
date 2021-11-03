@@ -9,6 +9,12 @@ This configuration allows you to quickly start a router, with a demo docker-comp
 
 ## Environment setup
 
+/ ! \ Make sure your submodules are up to date if you want to experiment around the local examples / ! \
+
+```sh
+$ git submodule update --init --recursive
+```
+
 This project will need several available ports on your machine:
 
 - 4000: A nodejs [apollo gateway](https://www.apollographql.com/docs/federation/gateway/)
@@ -16,7 +22,7 @@ This project will need several available ports on your machine:
 - 6831, 6832, 16686 and 14268: a [Jaeger tracing](https://www.jaegertracing.io/) node that will collect logs and spans from the gateway, the Apollo federation router, and the subservices. The traces are available at http://localhost:16686
 - 4100: The Apollo federation router
 
-In this project's root directory, run `docker-compose up -d`:
+In this directory, run `docker-compose up -d`:
 
 ```bash
 ignition@ignition-apollo router % docker-compose up -d
