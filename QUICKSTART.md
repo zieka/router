@@ -1,6 +1,6 @@
 # QUICKSTART
 
-/ ! \ Make sure your submodules are up to date if you want to experiment around the local examples / ! \
+⚠️ Make sure your submodules are up to date if you want to experiment around the local examples!
 
 ```sh
 $ git submodule update --init --recursive
@@ -12,7 +12,7 @@ $ git submodule update --init --recursive
 
 ### Quickstart example
 
-You're good to go! have a look at the [quickstart readme](./examples/quickstart/README.md) to start running the demo.
+You're good to go! have a look at the [Hello world! readme](./examples/hello-world/README.md) to start running the demo.
 
 ### Docker compose example
 
@@ -25,7 +25,3 @@ Have a look at the [docker-compose readme](./examples/docker-compose/README.md) 
 -[Nodejs and npm](https://nodejs.org/en/download/)
 
 Have a look at the [nodejs example readme](./examples/nodejs/README.md) to set the services up and run the demo.
-
-### Rust subservices example
-
-TODO [igni]

@@ -14,7 +14,7 @@ module.exports = {
         sidebarCategories: {
           null: ["index", "configuration"],
           Quickstart: [
-            "quickstart/studio",
+            "quickstart/helloworld",
             "quickstart/docker",
             "quickstart/nodejs",
           ],

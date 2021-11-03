@@ -6,8 +6,8 @@ description: Set up the Apollo router, and run it against a docker-compose based
 
 In this tutorial we will set up your environment so you can clone, build and run the Apollo router, as well as the `docker-compose` suite of subgraph services, as well as a [Jaeger tracing](https://www.jaegertracing.io/) collector.
 
-If you are looking for a less involved example, have a look at the no dependencies [🧑‍🚀 Public GraphQL example](public).
-If you would don't want to install docker locally, or want to edit the subraphs code, have a look at the the [Nodejs based example](nodejs).
+If you are looking for a less involved example, have a look at the no dependencies [🧑‍🚀 Hello World! example](helloworld).
+If you would don't want to install docker locally, or want to edit the subraphs nodejs code, have a look at the the [Nodejs based example](nodejs).
 
 ## Environment setup
 
@@ -74,7 +74,7 @@ A more exhaustive introduction to `docker-compose` can be found in the official 
 Run the Apollo router by typing this command in the project's root directory:
 
 ```sh
-cargo run -- -p ./examples/docker-compose
+cargo run --release -- -p ./examples/docker-compose
 ```
 
 Here is the expected output:

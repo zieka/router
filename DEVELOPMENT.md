@@ -65,7 +65,7 @@ requires that the `federation-demo` project is running:
   ```shell
   git submodule sync --recursive
   git submodule update --recursive --init
-  cd examples/nodejs/federation-demo/federation-demo
+  cd examples/nodejs/federation-demo
   npm install;
   npm run start
   ```
