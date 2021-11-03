@@ -1,4 +1,4 @@
-# docker-compose supergraph demonstration
+# Nodejs subservices demonstration
 
 This configuration allows you to quickly start a router, with a demo docker-compose.yml file.
 
