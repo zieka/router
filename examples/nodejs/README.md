@@ -18,7 +18,7 @@ $ git submodule update --init --recursive
 This project will need several available ports on your machine:
 
 - 4001 to 4004: nodejs GraphQL subservices.
-- 4100: The Apollo federation router.
+- 4000: The Apollo federation router.
 
 ### Setup and run the subservices
 
@@ -73,7 +73,7 @@ Here is the expected output:
     Finished dev [unoptimized + debuginfo] target(s) in 5.38s
      Running `target/debug/router -p ./examples/nodejs`
 Nov 02 17:08:09.926  INFO router: Starting Apollo Router
-Nov 02 17:08:10.279  INFO router: Listening on http://127.0.0.1:4100 🚀
+Nov 02 17:08:10.279  INFO router: Listening on http://127.0.0.1:4000 🚀
 ```
 
-Go to http://127.0.0.1:4100 to open the [Apollo studio explorer](https://www.apollographql.com/docs/studio/explorer/). Inspect the graph, and run your first queries using the Apollo federation router!
+Go to http://127.0.0.1:4000 to open the [Apollo studio explorer](https://www.apollographql.com/docs/studio/explorer/). Inspect the graph, and run your first queries using the Apollo federation router!

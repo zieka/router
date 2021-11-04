@@ -17,10 +17,9 @@ $ git submodule update --init --recursive
 
 This project will need several available ports on your machine:
 
-- 4000: A nodejs [Apollo gateway](https://www.apollographql.com/docs/federation/gateway/)
 - 4001 to 4004: nodejs subservices exposing functionality the apollo gateway and the Apollo Federation router will expose.
 - 6831, 6832, 16686 and 14268: a [Jaeger tracing](https://www.jaegertracing.io/) node that will collect logs and spans from the gateway, the Apollo federation router, and the subservices. The traces are available at http://localhost:16686
-- 4100: The Apollo federation router
+- 4000: The Apollo federation router
 
 In this directory, run `docker-compose up -d`:
 
@@ -45,7 +44,7 @@ ignition@ignition-apollo router % cargo run -- -p ./examples/docker-compose
     Finished dev [unoptimized + debuginfo] target(s) in 5.38s
      Running `target/debug/router -p ./examples/docker-compose`
 Nov 02 17:08:09.926  INFO router: Starting Apollo Router
-Nov 02 17:08:10.279  INFO router: Listening on http://127.0.0.1:4100 🚀
+Nov 02 17:08:10.279  INFO router: Listening on http://127.0.0.1:4000 🚀
 ```
 
-Go to http://127.0.0.1:4100 to open the [Apollo studio explorer](https://www.apollographql.com/docs/studio/explorer/) and inspect the graph, and run your first queries using the Apollo federation router!
+Go to http://127.0.0.1:4000 to open the [Apollo studio explorer](https://www.apollographql.com/docs/studio/explorer/) and inspect the graph, and run your first queries using the Apollo federation router!

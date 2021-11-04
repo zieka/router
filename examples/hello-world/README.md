@@ -14,7 +14,7 @@ If you would however rather compile the binary yourself, you will need:
 
 This project will need only one port on your machine:
 
-- 4100: The Apollo federation router
+- 4000: The Apollo federation router
 
 If you would like to change the server's used port, change the `examples/hello-world/configuration.yaml` file's `listen` entry:
 
@@ -57,7 +57,7 @@ ignition@ignition-apollo router % cargo run -- -p ./examples/hello-world
     Finished dev [unoptimized + debuginfo] target(s) in 5.38s
      Running `target/debug/router -p ./examples/hello-world`
 Nov 02 17:08:09.926  INFO router: Starting Apollo Router
-Nov 02 17:08:10.279  INFO router: Listening on http://127.0.0.1:4100 🚀
+Nov 02 17:08:10.279  INFO router: Listening on http://127.0.0.1:4000 🚀
 ```
 
-Go to http://127.0.0.1:4100 to open the [Apollo studio explorer](https://www.apollographql.com/docs/studio/explorer/) and inspect the graph, and run your first queries using the Apollo federation router!
+Go to http://127.0.0.1:4000 to open the [Apollo studio explorer](https://www.apollographql.com/docs/studio/explorer/) and inspect the graph, and run your first queries using the Apollo federation router!
