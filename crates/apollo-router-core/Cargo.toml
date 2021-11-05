@@ -12,6 +12,7 @@ license-file = "./LICENSE"
 failfast = []
 
 [dependencies]
+anyhow = "1.0.45"
 apollo-parser = { git = "https://github.com/apollographql/apollo-rs.git", rev = "14bb84337a8bacd5cd27d7d7df429936f104b63b" }
 async-trait = "0.1.51"
 derivative = "2.2.0"
@@ -28,6 +29,8 @@ tokio = { version = "1.13.0", features = ["rt"] }
 tracing = "0.1.29"
 tracing-futures = "0.2.5"
 typed-builder = "0.9.1"
+wasmtime = "0.31.0"
+wasmtime-wasi = "0.31.0"
 
 [dev-dependencies]
 criterion = { version = "0.3", features = ["async_tokio", "async_futures"] }

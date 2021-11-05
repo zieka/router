@@ -1,3 +1,4 @@
+use crate::extensions::Extensions;
 use crate::prelude::graphql::*;
 use derivative::Derivative;
 use futures::lock::Mutex;
@@ -7,6 +8,7 @@ use std::pin::Pin;
 use std::sync::Arc;
 use tracing::Instrument;
 use tracing_futures::WithSubscriber;
+use wasmtime::Val;
 
 /// Recursively validate a query plan node making sure that all services are known before we go
 /// for execution.
@@ -67,6 +69,8 @@ pub struct FederatedGraph {
     query_planner: Arc<dyn QueryPlanner>,
     service_registry: Arc<dyn ServiceRegistry>,
     schema: Arc<Schema>,
+    #[derivative(Debug = "ignore")]
+    extensions: Extensions,
 }
 
 impl FederatedGraph {
@@ -75,12 +79,14 @@ impl FederatedGraph {
         query_planner: Arc<dyn QueryPlanner>,
         service_registry: Arc<dyn ServiceRegistry>,
         schema: Arc<Schema>,
+        extensions: Extensions,
     ) -> Self {
         Self {
             naive_introspection: NaiveIntrospection::from_schema(&schema),
             query_planner,
             service_registry,
             schema,
+            extensions,
         }
     }
 }
@@ -89,6 +95,30 @@ impl Fetcher for FederatedGraph {
     fn stream(&self, request: Request) -> Pin<Box<dyn Future<Output = ResponseStream> + Send>> {
         let federated_query_span = tracing::info_span!("federated");
         tracing::trace!("Request received:\n{:#?}", request);
+        let mut execution_context = self.extensions.context();
+        tracing::info!("created execution context. it will live for the entire session");
+
+        // get an instance for the "launch" hook
+        let instance = execution_context.instantiate("launch".to_string()).unwrap();
+        tracing::info!("created instance of a wasm module");
+
+        let hello = instance
+            .get_func(&mut execution_context.store, "hello")
+            .expect("`hello` was not an exported function");
+        tracing::info!("got the hello function");
+
+        /*let res = hello
+        .typed::<(i32, u64), u64, _>(&execution_context.store)
+        .unwrap();*/
+
+        let world = "world";
+        //FIXME: obviously invalid pointer
+        let mut args = [Val::I32(world.as_ptr() as _), Val::I64(world.len() as i64)];
+        let mut results = [Val::I64(1); 1];
+        let result = hello
+            .call(&mut execution_context.store, &args[..], &mut results[..])
+            .unwrap();
+        println!("Answer: {:?}", results);
 
         if let Some(introspection_response) =
             federated_query_span.in_scope(|| self.naive_introspection.get(&request))

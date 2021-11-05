@@ -30,13 +30,17 @@ impl GraphFactory<graphql::FederatedGraph> for FederatedGraphFactory {
         schema: Arc<graphql::Schema>,
     ) -> graphql::FederatedGraph {
         let service_registry = HttpServiceRegistry::new(configuration);
-        tokio::task::spawn_blocking(|| {
+        let configuration = configuration.clone();
+        tokio::task::spawn_blocking(move || {
+            let query_planner =
+                graphql::RouterBridgeQueryPlanner::new(Arc::clone(&schema)).with_caching();
+            let extensions = configuration.load_wasm_modules().unwrap();
+
             graphql::FederatedGraph::new(
-                Arc::new(
-                    graphql::RouterBridgeQueryPlanner::new(Arc::clone(&schema)).with_caching(),
-                ),
+                Arc::new(query_planner),
                 Arc::new(service_registry),
                 schema,
+                extensions,
             )
         })
         .await
