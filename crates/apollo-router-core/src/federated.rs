@@ -173,12 +173,9 @@ impl Fetcher for FederatedGraph {
                         .await;
 
                         // TODO: this is not great but there is no other way
-                        let mut response = Arc::try_unwrap(response)
+                        let response = Arc::try_unwrap(response)
                             .expect("todo: how to prove?")
                             .into_inner();
-
-                        tracing::debug_span!("format_response")
-                            .in_scope(|| request.query.format_response(&mut response));
 
                         response
                     }
