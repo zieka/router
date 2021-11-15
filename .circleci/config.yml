@@ -74,6 +74,9 @@ jobs:
                 # This is prefixed in the orb with 'cargo-'
                 cache_version: v2-macos
                 crate: --workspace --tests
+            - run:
+                command: >
+                  cargo xtask test --with-demo
             - save_cache:
                 key: rust-target-v1-macos-{{ checksum "Cargo.lock" }}
                 paths:
@@ -112,6 +115,9 @@ jobs:
                 # This is prefixed in the orb with 'cargo-'
                 cache_version: v2-linux
                 crate: --workspace --tests
+            - run:
+                command: >
+                  cargo xtask test --with-demo
             - save_cache:
                 key: rust-target-v1-linux-{{ checksum "Cargo.lock" }}
                 paths:
@@ -187,10 +193,6 @@ jobs:
                 # This is prefixed in the orb with 'cargo-'
                 cache_version: v2-windows
                 crate: --workspace --tests
-            - save_cache:
-                key: rust-target-v1-windows-{{ checksum "Cargo.lock" }}
-                paths:
-                  - target/
             # TODO: normally xtask can run the federation by itself and it
             #       works on GitHub Actions on Windows. Unfortunately it
             #       doesn't work here on CircleCI on Windows only.
@@ -206,10 +208,13 @@ jobs:
             - run:
                 name: wait for federation demo to start
                 command: npx wait-on tcp:4001 tcp:4002 tcp:4003 tcp:4004 tcp:4100
-
-      - run:
-          command: >
-            cargo xtask test --with-demo
+            - run:
+                command: >
+                  cargo xtask test --with-demo
+            - save_cache:
+                key: rust-target-v1-windows-{{ checksum "Cargo.lock" }}
+                paths:
+                  - target/
       - run:
           command: >
             cargo xtask lint
