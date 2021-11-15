@@ -110,12 +110,23 @@ dependencies = [
 ]
 
 [[package]]
+name = "apollo-router-benchmarks"
+version = "0.1.0-alpha.0"
+dependencies = [
+ "apollo-router-core",
+ "criterion",
+ "futures",
+ "once_cell",
+ "serde_json",
+ "tokio",
+]
+
+[[package]]
 name = "apollo-router-core"
 version = "0.1.0-alpha.0"
 dependencies = [
  "apollo-parser",
  "async-trait",
- "criterion",
  "derivative",
  "displaydoc",
  "futures",
@@ -1208,7 +1219,6 @@ dependencies = [
  "futures-core",
  "futures-task",
  "futures-util",
- "num_cpus",
 ]
 
 [[package]]

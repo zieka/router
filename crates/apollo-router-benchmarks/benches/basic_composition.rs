@@ -5,7 +5,7 @@ use apollo_router_core::{
 use criterion::{criterion_group, criterion_main, Criterion};
 use futures::prelude::*;
 use once_cell::sync::OnceCell;
-use std::sync::Arc;
+use std::{pin::Pin, sync::Arc};
 
 macro_rules! generate_registry {
     ($name:ident => $( $service_name:ident : $service_struct:ident , )+) => {
@@ -75,8 +75,8 @@ macro_rules! generate_service {
         }
 
         impl Fetcher for $name {
-            fn stream(&self, request: Request) -> ResponseStream {
-                match request.query.as_str() {
+            fn stream(&self, request: Request) -> Pin<Box<dyn Future<Output = ResponseStream> + Send>> {
+                let res = match request.query.as_str() {
                     $(
                     $query => stream::iter(vec![$id.get().unwrap().clone()]).boxed(),
                     )+
@@ -86,7 +86,8 @@ macro_rules! generate_service {
                         other,
                         serde_json::to_string(&request.variables).unwrap(),
                     ),
-                }
+                };
+                Box::pin(async { res })
             }
         }
     };
@@ -122,21 +123,20 @@ async fn basic_composition_benchmark(federated: &FederatedGraph) {
             .collect(),
         ))
         .build();
-    let mut stream = federated.stream(request);
-    let _result = stream.next().await.unwrap();
+    let stream = federated.stream(request);
+    let _result = stream.await.next().await.unwrap();
     // expected: Response { label: None, data: Object({"topProducts": Array([Object({"upc": String("1"), "name": String("Table"), "__typename": String("Product"), "reviews": Array([Object({"id": String("1"), "product": Object({"__typename": String("Product"), "upc": String("1"), "name": String("Table")}), "author": Object({"id": String("1"), "__typename": String("User"), "name": String("Ada Lovelace")})}), Object({"id": String("4"), "product": Object({"__typename": String("Product"), "upc": String("1"), "name": String("Table")}), "author": Object({"id": String("2"), "__typename": String("User"), "name": String("Alan Turing")})})])}), Object({"upc": String("2"), "name": String("Couch"), "__typename": String("Product"), "reviews": Array([Object({"id": String("2"), "product": Object({"__typename": String("Product"), "upc": String("2"), "name": String("Couch")}), "author": Object({"id": String("1"), "__typename": String("User"), "name": String("Ada Lovelace")})})])}), Object({"upc": String("3"), "name": String("Chair"), "__typename": String("Product"), "reviews": Array([Object({"id": String("3"), "product": Object({"__typename": String("Product"), "upc": String("3"), "name": String("Chair")}), "author": Object({"id": String("2"), "__typename": String("User"), "name": String("Alan Turing")})})])})])}), path: None, has_next: None, errors: [], extensions: {} }
 }
 
 fn from_elem(c: &mut Criterion) {
-    let planner = RouterBridgeQueryPlanner::new(Arc::new(
-        include_str!("fixtures/supergraph.graphql").parse().unwrap(),
-    ));
+    let schema = Arc::new(include_str!("fixtures/supergraph.graphql").parse().unwrap());
+    let planner = RouterBridgeQueryPlanner::new(Arc::clone(&schema));
     let registry = Arc::new(MockRegistry::new());
-    let federated = FederatedGraph::new(Box::new(planner), registry.clone());
+    let federated = FederatedGraph::new(Arc::new(planner), registry.clone(), schema);
 
     c.bench_function("basic_composition_benchmark", |b| {
-        //let runtime = tokio::runtime::Runtime::new().unwrap();
-        let runtime = criterion::async_executor::FuturesExecutor;
+        let runtime = tokio::runtime::Runtime::new().unwrap();
+        //let runtime = criterion::async_executor::FuturesExecutor;
 
         b.to_async(runtime)
             .iter(|| basic_composition_benchmark(&federated));
