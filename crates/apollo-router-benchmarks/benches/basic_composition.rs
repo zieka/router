@@ -136,7 +136,6 @@ fn from_elem(c: &mut Criterion) {
 
     c.bench_function("basic_composition_benchmark", |b| {
         let runtime = tokio::runtime::Runtime::new().unwrap();
-        //let runtime = criterion::async_executor::FuturesExecutor;
 
         b.to_async(runtime)
             .iter(|| basic_composition_benchmark(&federated));
