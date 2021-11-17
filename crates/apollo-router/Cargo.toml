@@ -11,13 +11,14 @@ path = "src/main.rs"
 
 [features]
 default = ["otlp-tonic"]
+# activates OTLP/gRPC
 otlp-tonic = [
     "opentelemetry-otlp/tonic",
     "opentelemetry-otlp/tonic-build",
     "opentelemetry-otlp/prost",
     "tonic",
 ]
-otlp-grpcio = ["opentelemetry-otlp/grpc-sys", "opentelemetry-otlp/openssl"]
+# activates OTLP/HTTP
 otlp-http = ["opentelemetry-otlp/http-proto"]
 tls = ["opentelemetry-otlp/tls", "tonic/transport", "tonic/tls"]
 

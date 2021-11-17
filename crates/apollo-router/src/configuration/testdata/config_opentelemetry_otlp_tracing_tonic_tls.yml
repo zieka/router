@@ -7,7 +7,7 @@ opentelemetry:
   otlp:
     tracing:
       exporter:
-        tonic:
+        grpc:
           tls_config:
             ca:
               env: SECRET_STUFF

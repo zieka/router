@@ -7,5 +7,5 @@ opentelemetry:
   otlp:
     tracing:
       exporter:
-        tonic:
+        grpc:
           endpoint:

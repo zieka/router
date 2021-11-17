@@ -1,12 +1,8 @@
-#[cfg(feature = "otlp-grpcio")]
-mod grpcio;
 #[cfg(feature = "otlp-http")]
 mod http;
 #[cfg(feature = "otlp-tonic")]
 mod tonic;
 
-#[cfg(feature = "otlp-grpcio")]
-pub use self::grpcio::*;
 #[cfg(feature = "otlp-http")]
 pub use self::http::*;
 #[cfg(feature = "otlp-tonic")]
@@ -37,9 +33,7 @@ pub struct Tracing {
 #[serde(deny_unknown_fields, rename_all = "snake_case")]
 pub enum Exporter {
     #[cfg(feature = "otlp-tonic")]
-    Tonic(TonicExporter),
-    #[cfg(feature = "otlp-grpcio")]
-    GrpcIo(GrpcIoExporter),
+    Grpc(TonicExporter),
     #[cfg(feature = "otlp-http")]
     Http(HttpExporter),
 }
@@ -48,9 +42,7 @@ impl Exporter {
     pub fn exporter(&self) -> Result<opentelemetry_otlp::SpanExporterBuilder, ConfigurationError> {
         match &self {
             #[cfg(feature = "otlp-tonic")]
-            Exporter::Tonic(exporter) => Ok(exporter.exporter()?.into()),
-            #[cfg(feature = "otlp-grpcio")]
-            Exporter::GrpcIo(exporter) => Ok(exporter.exporter()?.into()),
+            Exporter::Grpc(exporter) => Ok(exporter.exporter()?.into()),
             #[cfg(feature = "otlp-http")]
             Exporter::Http(exporter) => Ok(exporter.exporter()?.into()),
         }
@@ -63,8 +55,6 @@ impl Exporter {
             Ok("http") => Ok(HttpExporter::exporter_from_env().into()),
             #[cfg(feature = "otlp-tonic")]
             Ok("tonic") => Ok(TonicExporter::exporter_from_env().into()),
-            #[cfg(feature = "otlp-grpcio")]
-            Ok("grpcio") => Ok(GrpcIoExporter::exporter_from_env().into()),
             Ok(val) => Err(ConfigurationError::InvalidEnvironmentVariable(format!(
                 "unrecognized value for ROUTER_TRACING: {}",
                 val

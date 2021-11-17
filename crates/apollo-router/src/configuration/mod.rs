@@ -1,6 +1,6 @@
 //! Logic for loading configuration in to an object model
 
-#[cfg(any(feature = "otlp-tonic", feature = "otlp-grpcio", feature = "otlp-http"))]
+#[cfg(any(feature = "otlp-tonic", feature = "otlp-http"))]
 pub mod otlp;
 
 use apollo_router_core::prelude::*;
@@ -199,7 +199,7 @@ impl Cors {
 #[allow(clippy::large_enum_variant)]
 pub enum OpenTelemetry {
     Jaeger(Option<Jaeger>),
-    #[cfg(any(feature = "otlp-tonic", feature = "otlp-grpcio", feature = "otlp-http"))]
+    #[cfg(any(feature = "otlp-tonic", feature = "otlp-http"))]
     Otlp(otlp::Otlp),
 }
 
@@ -312,7 +312,7 @@ mod tests {
         assert_config_snapshot!("testdata/config_opentelemetry_jaeger_full.yml");
     }
 
-    #[cfg(any(feature = "otlp-tonic", feature = "otlp-grpcio", feature = "otlp-http"))]
+    #[cfg(any(feature = "otlp-tonic", feature = "otlp-http"))]
     #[test]
     fn ensure_configuration_api_does_not_change_common() {
         // NOTE: don't take a snapshot here because the optional fields appear with ~ and they vary
@@ -321,12 +321,6 @@ mod tests {
         #[cfg(feature = "otlp-http")]
         serde_yaml::from_str::<Configuration>(include_str!(
             "testdata/config_opentelemetry_otlp_tracing_http_common.yml"
-        ))
-        .unwrap();
-
-        #[cfg(feature = "otlp-grpcio")]
-        serde_yaml::from_str::<Configuration>(include_str!(
-            "testdata/config_opentelemetry_otlp_tracing_grpcio_common.yml"
         ))
         .unwrap();
 
@@ -342,13 +336,6 @@ mod tests {
     fn ensure_configuration_api_does_not_change_tonic() {
         assert_config_snapshot!("testdata/config_opentelemetry_otlp_tracing_tonic_basic.yml");
         assert_config_snapshot!("testdata/config_opentelemetry_otlp_tracing_tonic_full.yml");
-    }
-
-    #[cfg(feature = "otlp-grpcio")]
-    #[test]
-    fn ensure_configuration_api_does_not_change_grpcio() {
-        assert_config_snapshot!("testdata/config_opentelemetry_otlp_tracing_grpcio_basic.yml");
-        assert_config_snapshot!("testdata/config_opentelemetry_otlp_tracing_grpcio_full.yml");
     }
 
     #[cfg(feature = "otlp-http")]
