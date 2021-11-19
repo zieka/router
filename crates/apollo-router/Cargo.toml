@@ -20,7 +20,7 @@ otlp-tonic = [
 ]
 # activates OTLP/HTTP
 otlp-http = ["opentelemetry-otlp/http-proto"]
-tls = ["opentelemetry-otlp/tls", "tonic/transport", "tonic/tls"]
+tls = ["opentelemetry-otlp/tls", "tonic/transport", "tonic/tls", "otlp-tonic"]
 
 [dependencies]
 anyhow = "1.0.47"
