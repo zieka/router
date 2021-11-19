@@ -10,9 +10,9 @@ name = "router"
 path = "src/main.rs"
 
 [features]
-default = ["otlp-tonic"]
+default = ["otlp-grpc"]
 # activates OTLP/gRPC
-otlp-tonic = [
+otlp-grpc = [
     "opentelemetry-otlp/tonic",
     "opentelemetry-otlp/tonic-build",
     "opentelemetry-otlp/prost",
@@ -20,7 +20,7 @@ otlp-tonic = [
 ]
 # activates OTLP/HTTP
 otlp-http = ["opentelemetry-otlp/http-proto"]
-tls = ["opentelemetry-otlp/tls", "tonic/transport", "tonic/tls", "otlp-tonic"]
+tls = ["opentelemetry-otlp/tls", "tonic/transport", "tonic/tls", "otlp-grpc"]
 
 [dependencies]
 anyhow = "1.0.47"

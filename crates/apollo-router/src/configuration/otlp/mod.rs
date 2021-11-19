@@ -1,11 +1,11 @@
 #[cfg(feature = "otlp-http")]
 mod http;
-#[cfg(feature = "otlp-tonic")]
+#[cfg(feature = "otlp-grpc")]
 mod tonic;
 
 #[cfg(feature = "otlp-http")]
 pub use self::http::*;
-#[cfg(feature = "otlp-tonic")]
+#[cfg(feature = "otlp-grpc")]
 pub use self::tonic::*;
 use crate::configuration::ConfigurationError;
 use opentelemetry::sdk::resource::Resource;
@@ -32,7 +32,7 @@ pub struct Tracing {
 #[derive(Debug, Clone, Deserialize, Serialize)]
 #[serde(deny_unknown_fields, rename_all = "snake_case")]
 pub enum Exporter {
-    #[cfg(feature = "otlp-tonic")]
+    #[cfg(feature = "otlp-grpc")]
     Grpc(TonicExporter),
     #[cfg(feature = "otlp-http")]
     Http(HttpExporter),
@@ -41,7 +41,7 @@ pub enum Exporter {
 impl Exporter {
     pub fn exporter(&self) -> Result<opentelemetry_otlp::SpanExporterBuilder, ConfigurationError> {
         match &self {
-            #[cfg(feature = "otlp-tonic")]
+            #[cfg(feature = "otlp-grpc")]
             Exporter::Grpc(exporter) => Ok(exporter.exporter()?.into()),
             #[cfg(feature = "otlp-http")]
             Exporter::Http(exporter) => Ok(exporter.exporter()?.into()),
@@ -53,7 +53,7 @@ impl Exporter {
         match std::env::var("ROUTER_TRACING").as_deref() {
             #[cfg(feature = "otlp-http")]
             Ok("http") => Ok(HttpExporter::exporter_from_env().into()),
-            #[cfg(feature = "otlp-tonic")]
+            #[cfg(feature = "otlp-grpc")]
             Ok("tonic") => Ok(TonicExporter::exporter_from_env().into()),
             Ok(val) => Err(ConfigurationError::InvalidEnvironmentVariable(format!(
                 "unrecognized value for ROUTER_TRACING: {}",
