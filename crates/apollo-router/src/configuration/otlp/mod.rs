@@ -33,18 +33,18 @@ pub struct Tracing {
 #[serde(deny_unknown_fields, rename_all = "snake_case")]
 pub enum Exporter {
     #[cfg(feature = "otlp-grpc")]
-    Grpc(TonicExporter),
+    Grpc(Option<TonicExporter>),
     #[cfg(feature = "otlp-http")]
-    Http(HttpExporter),
+    Http(Option<HttpExporter>),
 }
 
 impl Exporter {
     pub fn exporter(&self) -> Result<opentelemetry_otlp::SpanExporterBuilder, ConfigurationError> {
         match &self {
             #[cfg(feature = "otlp-grpc")]
-            Exporter::Grpc(exporter) => Ok(exporter.exporter()?.into()),
+            Exporter::Grpc(exporter) => Ok(exporter.clone().unwrap_or_default().exporter()?.into()),
             #[cfg(feature = "otlp-http")]
-            Exporter::Http(exporter) => Ok(exporter.exporter()?.into()),
+            Exporter::Http(exporter) => Ok(exporter.clone().unwrap_or_default().exporter()?.into()),
         }
     }
 
@@ -93,7 +93,7 @@ impl Tracing {
     }
 }
 
-#[derive(Debug, Clone, Deserialize, Serialize)]
+#[derive(Debug, Clone, Deserialize, Serialize, Default)]
 #[serde(deny_unknown_fields, rename_all = "snake_case")]
 pub struct ExportConfig {
     #[serde(deserialize_with = "endpoint_url", default)]
