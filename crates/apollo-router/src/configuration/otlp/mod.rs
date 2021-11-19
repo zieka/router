@@ -55,6 +55,12 @@ impl Exporter {
             Ok("http") => Ok(HttpExporter::exporter_from_env().into()),
             #[cfg(feature = "otlp-grpc")]
             Ok("tonic") => Ok(TonicExporter::exporter_from_env().into()),
+            #[cfg(not(any(feature = "otlp-http", feature = "otlp-grpc")))]
+            Ok(val) => Err(ConfigurationError::InvalidEnvironmentVariable(format!(
+                "unrecognized value for ROUTER_TRACING: {} - this router is built without support for OpenTelemetry",
+                val
+            ))),
+            #[cfg(any(feature = "otlp-http", feature = "otlp-grpc"))]
             Ok(val) => Err(ConfigurationError::InvalidEnvironmentVariable(format!(
                 "unrecognized value for ROUTER_TRACING: {}",
                 val
