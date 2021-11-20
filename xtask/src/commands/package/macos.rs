@@ -249,18 +249,18 @@ impl PackageMacos {
                 .output()
                 .context("could not start command xcrun")?;
 
-            let status = if !output.status.success() {
-                // NOTE: if the exit status is failure we need to keep trying otherwise the
-                //       process becomes a bit flaky
-                eprintln!("command exited with error");
-                None
-            } else {
+            let status = if output.status.success() {
                 let json: serde_json::Value = serde_json::from_slice(&output.stdout)
                     .context("could not parse json output")?;
                 serde_json_traversal!(json => notarization-info => Status)
                     .ok()
                     .and_then(|x| x.as_str())
                     .map(|x| x.to_string())
+            } else {
+                // NOTE: if the exit status is failure we need to keep trying otherwise the
+                //       process becomes a bit flaky
+                eprintln!("command exited with error");
+                None
             };
 
             if !matches!(

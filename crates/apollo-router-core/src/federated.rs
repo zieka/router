@@ -145,12 +145,12 @@ impl Fetcher for FederatedGraph {
 
                         // If we have any errors so far then let's abort the query
                         // Planning/validation/variables are candidates to abort.
-                        if !early_errors.is_empty() {
+                        if early_errors.is_empty() {
+                            None
+                        } else {
                             tracing::error!(errors = format!("{:?}", early_errors).as_str());
                             let response = Response::builder().errors(early_errors).build();
                             Some(stream::once(async move { response }).boxed())
-                        } else {
-                            None
                         }
                     });
 

@@ -59,11 +59,10 @@ impl Test {
         } else if self.no_demo {
             eprintln!("Flag --no-demo is the default now. Not running federation-demo.");
             Box::new(())
-        } else if !self.with_demo {
-            eprintln!("Not running federation-demo.");
-            Box::new(())
-        } else {
-            let mut maybe_pre_compile = if !self.no_pre_compile {
+        } else if self.with_demo {
+            let mut maybe_pre_compile = if self.no_pre_compile {
+                None
+            } else {
                 eprintln!("Starting background process to pre-compile the tests while federation-demo prepares...");
                 Some(
                     std::process::Command::new(which::which("cargo")?)
@@ -74,8 +73,6 @@ impl Test {
                         .arg("--no-run")
                         .spawn()?,
                 )
-            } else {
-                None
             };
 
             let demo = FederationDemoRunner::new()?;
@@ -87,6 +84,9 @@ impl Test {
             }
 
             Box::new((demo, guard))
+        } else {
+            eprintln!("Not running federation-demo.");
+            Box::new(())
         };
 
         for features in FEATURE_SETS {

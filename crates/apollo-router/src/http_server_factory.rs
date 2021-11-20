@@ -92,9 +92,7 @@ impl HttpServerHandle {
         tracing::info!("previous server is closed");
 
         // we keep the TCP listener if it is compatible with the new configuration
-        let listener = if self.listen_address != configuration.server.listen {
-            None
-        } else {
+        let listener = if self.listen_address == configuration.server.listen {
             match listener {
                 Ok(listener) => Some(listener),
                 Err(e) => {
@@ -102,6 +100,8 @@ impl HttpServerHandle {
                     None
                 }
             }
+        } else {
+            None
         };
 
         let handle = factory
