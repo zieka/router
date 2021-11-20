@@ -279,12 +279,9 @@ impl TlsConfig {
             config = config.ca_certificate(certificate);
         }
 
-        match (self.cert.as_ref(), self.key.as_ref()) {
-            (Some(cert), Some(key)) => {
-                let identity = tonic::transport::Identity::from_pem(cert.read()?, key.read()?);
-                config = config.identity(identity);
-            }
-            _ => {}
+        if let (Some(cert), Some(key)) = (self.cert.as_ref(), self.key.as_ref()) {
+            let identity = tonic::transport::Identity::from_pem(cert.read()?, key.read()?);
+            config = config.identity(identity);
         }
 
         Ok(config)

@@ -24,14 +24,11 @@ impl Exporter {
     ) -> Result<opentelemetry_otlp::GrpcioExporterBuilder, ConfigurationError> {
         let mut exporter = opentelemetry_otlp::new_exporter().grpcio();
         exporter = self.export_config.apply(exporter);
-        match (self.cert.as_ref(), self.key.as_ref()) {
-            (Some(cert), Some(key)) => {
-                exporter = exporter.with_credentials(opentelemetry_otlp::Credentials {
-                    cert: cert.read()?,
-                    key: key.read()?,
-                });
-            }
-            _ => {}
+        if let (Some(cert), Some(key)) = (self.cert.as_ref(), self.key.as_ref()) {
+            exporter = exporter.with_credentials(opentelemetry_otlp::Credentials {
+                cert: cert.read()?,
+                key: key.read()?,
+            });
         }
         if let Some(headers) = self.headers.clone() {
             exporter = exporter.with_headers(headers);
