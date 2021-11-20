@@ -132,7 +132,9 @@ impl HttpSubgraphFetcher {
                 // since `bytes_stream` is fused, reentering the fold will lead us here,
                 // with an empty `current_payload_bytes` thus effectively yielding None,
                 // and exiting the fold
-                if !current_payload_bytes.is_empty() {
+                if current_payload_bytes.is_empty() {
+                    None
+                } else {
                     let last_response =
                         serde_json::from_slice::<graphql::Response>(&current_payload_bytes)
                             .unwrap_or_else(|error| {
@@ -146,8 +148,6 @@ impl HttpSubgraphFetcher {
                         last_response,
                         (bytes_stream, BytesMut::new(), service_name, false),
                     ))
-                } else {
-                    None
                 }
             },
         )

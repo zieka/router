@@ -115,13 +115,7 @@ impl SchemaKind {
             SchemaKind::Stream(stream) => stream.map(UpdateSchema).boxed(),
             SchemaKind::File { path, watch, delay } => {
                 // Sanity check, does the schema file exists, if it doesn't then bail.
-                if !path.exists() {
-                    tracing::error!(
-                        "Schema file at path '{}' does not exist.",
-                        path.to_string_lossy()
-                    );
-                    stream::empty().boxed()
-                } else {
+                if path.exists() {
                     //The schema file exists try and load it
                     match ConfigurationKind::read_schema(&path) {
                         Ok(schema) => {
@@ -141,6 +135,12 @@ impl SchemaKind {
                             stream::empty().boxed()
                         }
                     }
+                } else {
+                    tracing::error!(
+                        "Schema file at path '{}' does not exist.",
+                        path.to_string_lossy()
+                    );
+                    stream::empty().boxed()
                 }
             }
             SchemaKind::Registry { .. } => {
@@ -190,13 +190,7 @@ impl ConfigurationKind {
             ConfigurationKind::Stream(stream) => stream.map(UpdateConfiguration).boxed(),
             ConfigurationKind::File { path, watch, delay } => {
                 // Sanity check, does the config file exists, if it doesn't then bail.
-                if !path.exists() {
-                    tracing::error!(
-                        "Configuration file at path '{}' does not exist.",
-                        path.to_string_lossy()
-                    );
-                    stream::empty().boxed()
-                } else {
+                if path.exists() {
                     match ConfigurationKind::read_config(&path) {
                         Ok(configuration) => {
                             if watch {
@@ -216,6 +210,12 @@ impl ConfigurationKind {
                             stream::empty().boxed()
                         }
                     }
+                } else {
+                    tracing::error!(
+                        "Configuration file at path '{}' does not exist.",
+                        path.to_string_lossy()
+                    );
+                    stream::empty().boxed()
                 }
             }
         }
